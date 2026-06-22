@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>消消鸭对战原型</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="start-screen" id="start-screen">
+        <div class="start-shell">
+          <div class="start-main">
+            <div class="start-duel" aria-hidden="true">
+              <div class="avatar start-avatar">
+                <img src="./assets/icons/avatar-player.png" alt="" />
+              </div>
+              <strong class="versus-badge">VS</strong>
+              <div class="avatar avatar-ai start-avatar">
+                <img src="./assets/icons/avatar-ai.png" alt="" />
+              </div>
+            </div>
+            <p class="eyebrow">MVP v0.1</p>
+            <h1>消消鸭对战</h1>
+            <img class="start-logo" src="./assets/source/main-logo-cutout.png" alt="消消鸭" />
+            <div class="start-actions">
+              <button class="primary-button start-button" id="start-match-button" type="button">开始对局</button>
+              <button class="primary-button start-button start-button-swim" id="start-swim-button" type="button">游泳竞速</button>
+              <button
+                class="secondary-button"
+                id="record-toggle-button"
+                type="button"
+                aria-expanded="false"
+                aria-controls="record-panel"
+              >
+                记录
+              </button>
+            </div>
+          </div>
+
+          <section class="record-panel record-panel-hidden" id="record-panel" aria-label="当前 IP 胜负记录">
+            <div class="record-header">
+              <div>
+                <p class="eyebrow">当前 IP</p>
+                <h2 id="record-host">127.0.0.1</h2>
+              </div>
+              <button class="ghost-button" id="record-reset-button" type="button">清除</button>
+            </div>
+            <div class="record-mode">
+              <h3>拳击 1v1</h3>
+              <div class="record-grid">
+                <div class="record-stat">
+                  <span>总局</span>
+                  <strong id="record-boxing-games">0</strong>
+                </div>
+                <div class="record-stat">
+                  <span>胜</span>
+                  <strong id="record-boxing-wins">0</strong>
+                </div>
+                <div class="record-stat">
+                  <span>负</span>
+                  <strong id="record-boxing-losses">0</strong>
+                </div>
+                <div class="record-stat">
+                  <span>平</span>
+                  <strong id="record-boxing-draws">0</strong>
+                </div>
+              </div>
+              <div class="record-rate">
+                <span>胜率</span>
+                <strong id="record-boxing-win-rate">0%</strong>
+              </div>
+            </div>
+            <div class="record-mode">
+              <h3>游泳竞速</h3>
+              <div class="record-grid">
+                <div class="record-stat">
+                  <span>总局</span>
+                  <strong id="record-swim-games">0</strong>
+                </div>
+                <div class="record-stat">
+                  <span>冠军</span>
+                  <strong id="record-swim-wins">0</strong>
+                </div>
+                <div class="record-stat">
+                  <span>未冠</span>
+                  <strong id="record-swim-losses">0</strong>
+                </div>
+                <div class="record-stat">
+                  <span>前三</span>
+                  <strong id="record-swim-draws">0</strong>
+                </div>
+              </div>
+              <div class="record-rate">
+                <span>冠军率</span>
+                <strong id="record-swim-win-rate">0%</strong>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="game-screen screen-hidden" id="game-screen">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">MVP v0.1</p>
+            <h1>消消鸭对战</h1>
+          </div>
+          <button class="primary-button" id="new-match-button" type="button">新对局</button>
+        </header>
+
+        <section class="status-strip" id="match-status" aria-live="polite"></section>
+
+        <section class="arena" aria-label="三消对战棋盘">
+          <article class="fighter fighter-player">
+            <div class="fighter-header">
+              <div class="avatar avatar-player">
+                <img src="./assets/icons/avatar-player.png" alt="" />
+              </div>
+              <div>
+                <p class="eyebrow">你</p>
+                <h2>拳击鸭</h2>
+              </div>
+            </div>
+            <div class="meters" id="player-meters"></div>
+            <div class="board" id="player-board" aria-label="玩家棋盘"></div>
+          </article>
+
+          <aside class="battle-log">
+            <h2>对战日志</h2>
+            <ol id="battle-log-list"></ol>
+          </aside>
+
+          <article class="fighter fighter-ai">
+            <div class="fighter-header">
+              <div class="avatar avatar-ai">
+                <img src="./assets/icons/avatar-ai.png" alt="" />
+              </div>
+              <div>
+                <p class="eyebrow">对手</p>
+                <h2>AI 拳手</h2>
+              </div>
+            </div>
+            <div class="meters" id="ai-meters"></div>
+            <div class="board board-ai" id="ai-board" aria-label="AI 棋盘"></div>
+          </article>
+        </section>
+      </section>
+
+      <section class="swim-screen screen-hidden" id="swim-screen">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Battle Royale</p>
+            <h1>游泳竞速</h1>
+          </div>
+          <div class="topbar-actions">
+            <button class="secondary-button" id="swim-menu-button" type="button">返回开始</button>
+            <button class="primary-button" id="new-swim-button" type="button">新比赛</button>
+          </div>
+        </header>
+
+        <section class="status-strip swim-status-strip" id="swim-status" aria-live="polite"></section>
+
+        <section class="swim-arena" aria-label="游泳竞速">
+          <article class="fighter swim-match-panel">
+            <div class="fighter-header">
+              <div class="avatar avatar-player">
+                <img src="./assets/icons/avatar-player.png" alt="" />
+              </div>
+              <div>
+                <p class="eyebrow">你</p>
+                <h2>清障掉落</h2>
+              </div>
+            </div>
+            <div class="swim-action-summary" id="swim-action-summary"></div>
+            <div class="swim-hud" id="swim-hud" aria-label="游泳竞速状态">
+              <div class="swim-screen-meter">
+                <span>当前屏</span>
+                <div class="swim-screen-nodes" id="swim-screen-nodes"></div>
+              </div>
+              <div class="swim-wave-meter" id="swim-wave-meter"></div>
+            </div>
+            <div class="board" id="swim-player-board" aria-label="游泳竞速三消棋盘"></div>
+          </article>
+
+          <article class="swim-race-panel">
+            <div class="swim-race-header">
+              <div>
+                <p class="eyebrow">Same Board / 5 Screens</p>
+                <h2>同屏目标</h2>
+              </div>
+              <strong id="swim-wave-countdown">浪潮</strong>
+            </div>
+            <div class="swim-racers" id="swim-racers"></div>
+          </article>
+        </section>
+      </section>
+
+      <section
+        class="result-modal result-modal-hidden"
+        id="result-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-live="assertive"
+        aria-labelledby="result-title"
+        aria-describedby="result-message"
+      >
+        <div class="result-panel">
+          <p class="eyebrow" id="result-kicker">比赛结束</p>
+          <h2 id="result-title">胜利</h2>
+          <p id="result-message">你赢下了这场对战。</p>
+          <div class="result-actions">
+            <button class="primary-button" id="result-new-match-button" type="button">再来一局</button>
+            <button class="secondary-button" id="result-menu-button" type="button">返回开始</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./src/main.js?v=swim-20-menu"></script>
+  </body>
+</html>
