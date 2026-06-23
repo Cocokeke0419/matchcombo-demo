@@ -112,8 +112,8 @@ http://127.0.0.1:5173/frontend/
 当前推荐测试链接：
 
 ```text
-http://127.0.0.1:5173/frontend/?mode=boxing&v=boxing-swim-1
-http://127.0.0.1:5173/frontend/?mode=swim&v=boxing-swim-1
+http://127.0.0.1:5173/frontend/?mode=boxing&v=swim-wave-2
+http://127.0.0.1:5173/frontend/?mode=swim&v=swim-wave-2
 ```
 
 ## 5. 核心文件
@@ -242,7 +242,7 @@ tickSwimAi()
 - 空格可移动。
 - 当前关闭斜向掉落，使用和拳击一致的直线掉落，并继续检测后续合成。
 - 鸭子到底进入下一屏。
-- 浪潮向上推 3 行，但有木箱的列不推。
+- 浪潮向上推 3 行，但有木箱的列不推；鸭子所在列无木箱时随浪潮后退，有木箱时不后退。
 
 ### 5.4 `frontend/src/audio.js`
 
@@ -344,8 +344,8 @@ https://cocokeke0419.github.io/matchcombo-demo/
 直达链接：
 
 ```text
-https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=boxing&v=boxing-swim-1
-https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=swim&v=boxing-swim-1
+https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=boxing&v=swim-wave-2
+https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=swim&v=swim-wave-2
 ```
 
 ### 8.3 验证公开 demo

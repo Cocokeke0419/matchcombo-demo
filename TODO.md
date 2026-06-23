@@ -10,7 +10,7 @@
 - 私有远端：`origin/develop`
 - 公开 demo 仓库：`C:\Users\happyelements\Documents\match combo 2\matchcombo-demo-public-20260622205216`
 - 公开试玩链接：https://cocokeke0419.github.io/matchcombo-demo/
-- 当前重点版本：拳击充能实时化、游泳缩小棋盘并回到直线掉落，入口缓存号 `boxing-swim-1`
+- 当前重点版本：游泳浪潮会推动无木箱列；鸭子所在列无木箱时一起后退，有木箱时不后退，入口缓存号 `swim-wave-2`
 
 ## 提交前固定检查
 
@@ -127,6 +127,7 @@
 - [x] 木箱摆放更规则，保留可掉落列
 - [x] 浪潮向上推 3 行
 - [x] 有木箱的列不被浪潮推动
+- [x] 鸭子所在列无木箱时随浪潮后退，有木箱时被木箱挡住不后退
 - [x] 返回开始按钮
 - [x] 游泳 AI 多轮调弱/调回，当前仍需继续手感调优
 

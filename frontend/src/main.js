@@ -2380,6 +2380,13 @@ function swimColumnHasCrate(board, col) {
   return false;
 }
 
+function pushSwimColumnUp(board, col) {
+  for (let row = 0; row < BOARD_SIZE - 1; row++) {
+    board[boardIndex(row, col)] = board[boardIndex(row + 1, col)];
+  }
+  board[boardIndex(BOARD_SIZE - 1, col)] = createSwimGem();
+}
+
 function pushSwimBoardUpOnce(board) {
   if (swimState.duckRow <= 0) {
     return false;
@@ -2390,11 +2397,7 @@ function pushSwimBoardUpOnce(board) {
     if (swimColumnHasCrate(board, col)) {
       continue;
     }
-
-    for (let row = 0; row < BOARD_SIZE - 1; row++) {
-      board[boardIndex(row, col)] = board[boardIndex(row + 1, col)];
-    }
-    board[boardIndex(BOARD_SIZE - 1, col)] = createSwimGem();
+    pushSwimColumnUp(board, col);
     pushedColumns++;
   }
 
