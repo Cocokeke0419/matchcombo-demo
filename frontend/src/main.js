@@ -3147,8 +3147,7 @@ window.matchComboDebug = {
 function startupModeFromUrl() {
   const params = new URLSearchParams(window.location.search);
   const requestedMode = params.get("mode");
-  const versionTag = params.get("v") || "";
-  if (requestedMode === "swim" || versionTag.startsWith("swim-")) {
+  if (requestedMode === "swim") {
     return "swim";
   }
   if (requestedMode === "boxing") {

@@ -112,8 +112,9 @@ http://127.0.0.1:5173/frontend/
 当前推荐测试链接：
 
 ```text
-http://127.0.0.1:5173/frontend/?mode=boxing&v=swim-wave-2
-http://127.0.0.1:5173/frontend/?mode=swim&v=swim-wave-2
+http://127.0.0.1:5173/frontend/?v=demo-start-1
+http://127.0.0.1:5173/frontend/?mode=boxing&v=demo-start-1
+http://127.0.0.1:5173/frontend/?mode=swim&v=demo-start-1
 ```
 
 ## 5. 核心文件
@@ -344,8 +345,9 @@ https://cocokeke0419.github.io/matchcombo-demo/
 直达链接：
 
 ```text
-https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=boxing&v=swim-wave-2
-https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=swim&v=swim-wave-2
+https://cocokeke0419.github.io/matchcombo-demo/frontend/?v=demo-start-1
+https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=boxing&v=demo-start-1
+https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=swim&v=demo-start-1
 ```
 
 ### 8.3 验证公开 demo

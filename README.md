@@ -10,8 +10,9 @@
 ## 试玩链接
 
 - 公开 demo：https://cocokeke0419.github.io/matchcombo-demo/
-- 拳击 1v1 直达：https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=boxing&v=swim-wave-2
-- 游泳竞速直达：https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=swim&v=swim-wave-2
+- 通用开始界面：https://cocokeke0419.github.io/matchcombo-demo/frontend/?v=demo-start-1
+- 拳击 1v1 直达：https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=boxing&v=demo-start-1
+- 游泳竞速直达：https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=swim&v=demo-start-1
 
 公开 demo 仓库：
 
@@ -48,8 +49,9 @@ http://127.0.0.1:5173/frontend/
 常用直达：
 
 ```text
-http://127.0.0.1:5173/frontend/?mode=boxing&v=swim-wave-2
-http://127.0.0.1:5173/frontend/?mode=swim&v=swim-wave-2
+http://127.0.0.1:5173/frontend/?v=demo-start-1
+http://127.0.0.1:5173/frontend/?mode=boxing&v=demo-start-1
+http://127.0.0.1:5173/frontend/?mode=swim&v=demo-start-1
 ```
 
 ## Git 与版本

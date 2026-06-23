@@ -10,7 +10,7 @@
 - 私有远端：`origin/develop`
 - 公开 demo 仓库：`C:\Users\happyelements\Documents\match combo 2\matchcombo-demo-public-20260622205216`
 - 公开试玩链接：https://cocokeke0419.github.io/matchcombo-demo/
-- 当前重点版本：游泳浪潮会推动无木箱列；鸭子所在列无木箱时一起后退，有木箱时不后退，入口缓存号 `swim-wave-2`
+- 当前重点版本：通用链接默认进入开始界面，只有 `mode=boxing` / `mode=swim` 会直达模式，入口缓存号 `demo-start-1`
 
 ## 提交前固定检查
 
