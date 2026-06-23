@@ -23,6 +23,7 @@ const aiMetersEl = document.querySelector("#ai-meters");
 const statusEl = document.querySelector("#match-status");
 const logListEl = document.querySelector("#battle-log-list");
 const newMatchButton = document.querySelector("#new-match-button");
+const gameMenuButton = document.querySelector("#game-menu-button");
 const resultModalEl = document.querySelector("#result-modal");
 const resultKickerEl = document.querySelector("#result-kicker");
 const resultTitleEl = document.querySelector("#result-title");
@@ -2992,6 +2993,7 @@ document.addEventListener?.("pointerdown", () => void primeAudio(), { once: true
 document.addEventListener?.("keydown", () => void primeAudio(), { once: true });
 startMatchButton.addEventListener("click", handleStartMatchButton);
 startSwimButton.addEventListener("click", handleStartSwimButton);
+gameMenuButton.addEventListener("click", handleResultMenuButton);
 newMatchButton.addEventListener("click", handleNewMatchButton);
 newSwimButton.addEventListener("click", () => {
   void primeAudio();
