@@ -10,8 +10,8 @@
 ## 试玩链接
 
 - 公开 demo：https://cocokeke0419.github.io/matchcombo-demo/
-- 拳击 1v1 直达：https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=boxing&v=boxing-ai-2
-- 游泳竞速直达：https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=swim&v=boxing-ai-2
+- 拳击 1v1 直达：https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=boxing&v=boxing-swim-1
+- 游泳竞速直达：https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=swim&v=boxing-swim-1
 
 公开 demo 仓库：
 
@@ -48,8 +48,8 @@ http://127.0.0.1:5173/frontend/
 常用直达：
 
 ```text
-http://127.0.0.1:5173/frontend/?mode=boxing&v=boxing-ai-2
-http://127.0.0.1:5173/frontend/?mode=swim&v=boxing-ai-2
+http://127.0.0.1:5173/frontend/?mode=boxing&v=boxing-swim-1
+http://127.0.0.1:5173/frontend/?mode=swim&v=boxing-swim-1
 ```
 
 ## Git 与版本
@@ -114,7 +114,7 @@ TECH_SPEC.md            技术说明和部署说明
 1. 拳击 1v1 已支持 AI 实时行动，不再等待玩家整步结束。
 2. AI 对玩家造成伤害或木箱时，如果玩家棋盘正在动画/结算，会先缓存，等玩家这一步结束后再施加。
 3. 拳击 AI 已下调强度：出手间隔更长，充能倍率降低，并限制 AI 单步连锁爆发。
-4. 游泳竞速已做到 5 屏推进、鸭子同棋子交换、木箱阻挡掉落、浪潮上推、空格可移动、斜向掉落。
+4. 游泳竞速已做到 5 屏推进、鸭子同棋子交换、木箱阻挡掉落、浪潮上推、空格可移动；当前关闭斜向掉落，使用和拳击一致的直线掉落。
 5. 公开 demo 使用 GitHub Pages 部署，适合提交链接试玩。
 
 ## 给新对话 Codex 的接管提示

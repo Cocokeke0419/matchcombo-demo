@@ -1272,9 +1272,10 @@ h2 {
 
 .swim-arena {
   display: grid;
-  grid-template-columns: minmax(380px, 560px) minmax(240px, 1fr);
+  grid-template-columns: minmax(330px, 440px) minmax(220px, 300px);
   gap: 16px;
   align-items: start;
+  justify-content: center;
 }
 
 .swim-match-panel {
@@ -1283,13 +1284,13 @@ h2 {
 }
 
 .swim-action-summary {
-  min-height: 42px;
+  min-height: 34px;
   display: grid;
   align-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   border: 2px solid rgba(255, 189, 48, 0.68);
   border-radius: 8px;
-  padding: 8px 10px;
+  padding: 6px 9px;
   color: #315234;
   background: rgba(255, 246, 203, 0.7);
   font-size: 0.82rem;
@@ -1297,15 +1298,23 @@ h2 {
   line-height: 1.28;
 }
 
+.swim-status-strip {
+  min-height: 34px;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  line-height: 1.22;
+}
+
 .swim-hud {
   display: grid;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 6px;
+  margin-bottom: 8px;
 }
 
 .swim-screen-meter,
 .swim-wave-meter {
-  min-height: 38px;
+  min-height: 34px;
   display: grid;
   align-items: center;
   border: 2px solid rgba(255, 189, 48, 0.68);
@@ -1322,7 +1331,7 @@ h2 {
 .swim-screen-meter {
   grid-template-columns: 72px 1fr;
   gap: 8px;
-  padding: 7px 9px;
+  padding: 5px 8px;
 }
 
 .swim-screen-meter > span,
@@ -1357,8 +1366,8 @@ h2 {
   z-index: 1;
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  width: 23px;
+  height: 23px;
   justify-self: center;
   border: 3px solid rgba(255, 255, 255, 0.8);
   border-radius: 50%;
@@ -1522,6 +1531,9 @@ h2 {
 }
 
 #swim-player-board {
+  max-width: min(100%, 440px, calc(100vh - 255px));
+  min-width: 330px;
+  margin-inline: auto;
   border-color: #e6a63f;
   background:
     linear-gradient(180deg, rgba(226, 247, 255, 0.96), rgba(180, 216, 246, 0.96)),
@@ -1942,6 +1954,11 @@ h2 {
   .swim-race-panel {
     padding: 8px;
     border-width: 3px;
+  }
+
+  #swim-player-board {
+    max-width: min(100%, 250px);
+    min-width: 0;
   }
 
   .swim-racers {

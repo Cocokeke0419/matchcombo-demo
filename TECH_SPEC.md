@@ -112,8 +112,8 @@ http://127.0.0.1:5173/frontend/
 当前推荐测试链接：
 
 ```text
-http://127.0.0.1:5173/frontend/?mode=boxing&v=boxing-ai-2
-http://127.0.0.1:5173/frontend/?mode=swim&v=boxing-ai-2
+http://127.0.0.1:5173/frontend/?mode=boxing&v=boxing-swim-1
+http://127.0.0.1:5173/frontend/?mode=swim&v=boxing-swim-1
 ```
 
 ## 5. 核心文件
@@ -154,7 +154,7 @@ battle: {
 - 棋子创建
 - 匹配检测
 - 特效生成判断
-- 掉落、斜向掉落、补棋
+- 直线掉落、补棋
 - 普通交换
 - 无效交换判定
 - 特效触发
@@ -240,7 +240,7 @@ tickSwimAi()
 - 鸭子可与空格交换。
 - 木箱阻挡掉落。
 - 空格可移动。
-- 支持斜向掉落和后续合成。
+- 当前关闭斜向掉落，使用和拳击一致的直线掉落，并继续检测后续合成。
 - 鸭子到底进入下一屏。
 - 浪潮向上推 3 行，但有木箱的列不推。
 
@@ -344,8 +344,8 @@ https://cocokeke0419.github.io/matchcombo-demo/
 直达链接：
 
 ```text
-https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=boxing&v=boxing-ai-2
-https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=swim&v=boxing-ai-2
+https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=boxing&v=boxing-swim-1
+https://cocokeke0419.github.io/matchcombo-demo/frontend/?mode=swim&v=boxing-swim-1
 ```
 
 ### 8.3 验证公开 demo

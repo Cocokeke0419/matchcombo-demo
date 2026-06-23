@@ -125,14 +125,14 @@ const SWIM_RESOLVE_OPTIONS = {
     generousRefillChance: 0.05,
     avoidImmediateMatches: true,
     refillOnlyFromTop: true,
-    diagonalFall: true,
+    diagonalFall: false,
   },
   stopRefill: {
     controlledRefill: true,
     generousRefillChance: 0,
     avoidImmediateMatches: true,
     refillOnlyFromTop: true,
-    diagonalFall: true,
+    diagonalFall: false,
   },
 };
 let swimNextPieceId = -1;
@@ -280,6 +280,10 @@ function ensureSwimBoardPlayable(board) {
 function seedSwimBoard(board, screen = 1, duckCol = SWIM_START_COL) {
   const layouts = [
     [
+      [1, 0],
+      [1, 7],
+      [2, 0],
+      [2, 7],
       [3, 6],
       [3, 7],
       [4, 6],
@@ -294,8 +298,11 @@ function seedSwimBoard(board, screen = 1, duckCol = SWIM_START_COL) {
       [7, 7],
     ],
     [
+      [1, 6],
+      [1, 7],
       [2, 6],
       [2, 7],
+      [3, 5],
       [3, 0],
       [3, 1],
       [3, 6],
@@ -310,6 +317,10 @@ function seedSwimBoard(board, screen = 1, duckCol = SWIM_START_COL) {
       [7, 5],
     ],
     [
+      [1, 0],
+      [1, 7],
+      [2, 0],
+      [2, 7],
       [3, 0],
       [3, 1],
       [3, 6],
@@ -326,6 +337,8 @@ function seedSwimBoard(board, screen = 1, duckCol = SWIM_START_COL) {
       [7, 5],
     ],
     [
+      [1, 0],
+      [1, 7],
       [2, 6],
       [3, 1],
       [3, 7],
@@ -340,6 +353,8 @@ function seedSwimBoard(board, screen = 1, duckCol = SWIM_START_COL) {
       [7, 5],
     ],
     [
+      [1, 0],
+      [1, 6],
       [2, 5],
       [2, 6],
       [3, 6],
@@ -377,7 +392,7 @@ function createSwimState() {
     waveCountdown: SWIM_WAVE_INTERVAL,
     waveSurges: 0,
     placements: [],
-    lastSummary: "鸭子是一枚可交换棋子。把它换到合适的列，清出下方通路，让它掉出棋盘进入下一屏。",
+    lastSummary: "交换鸭子，清出下方通路，让它掉到底部进入下一屏。",
     racers: Array.from({ length: SWIM_RACER_COUNT }, (_, index) => ({
       id: index === 0 ? "player" : `ai-${index}`,
       name: names[index],
@@ -909,11 +924,8 @@ function renderSwimStatus() {
   syncPlayerSwimRacer();
   const screen = swimState.screen;
   const rank = swimRankForRacer(player);
-  const rowsToNextMilestone =
-    screen < SWIM_SCREEN_COUNT ? BOARD_SIZE - 1 - swimState.duckRow : BOARD_SIZE - 1 - swimState.duckRow;
-  const milestoneText = screen < SWIM_SCREEN_COUNT ? `距下一屏 ${rowsToNextMilestone} 行` : `距终点 ${rowsToNextMilestone} 行`;
   const waveText = `浪潮 ${swimState.waveCountdown} 步后上推 ${SWIM_WAVE_PUSH_ROWS} 行`;
-  swimStatusEl.textContent = `鸭子在同一张棋盘内：第 ${screen}/${SWIM_SCREEN_COUNT} 屏，第 ${swimState.duckRow + 1}/${BOARD_SIZE} 行 · ${milestoneText} · 当前第 ${rank} 名 · ${waveText}`;
+  swimStatusEl.textContent = `第 ${screen}/${SWIM_SCREEN_COUNT} 屏 · 鸭子第 ${swimState.duckRow + 1}/${BOARD_SIZE} 行 · 当前第 ${rank} 名 · ${waveText}`;
   swimWaveCountdownEl.textContent = waveText;
   swimActionSummaryEl.textContent = swimState.lastSummary;
   renderSwimHud(screen);
@@ -2217,6 +2229,19 @@ function flushPendingPlayerSettlements() {
   flushPendingAiSettlements();
 }
 
+function applyPlayerBattleResultNow(result, previousStatus) {
+  applyResultToBattle(state, "player", result);
+  renderChrome();
+  renderBoard(aiBoardEl, "ai");
+  return { result, previousStatus };
+}
+
+function playPlayerBattleFeedback(settlement) {
+  playBattleEventSounds(settlement.result, "player", settlement.previousStatus);
+  animateBattleEvents(settlement.result);
+  flushPendingAiSettlements();
+}
+
 function schedulePendingPlayerSettlement(result, previousStatus) {
   pendingPlayerSettlements.push({ result, previousStatus });
 
@@ -2394,6 +2419,7 @@ function triggerSwimWave() {
 
   if (pushed > 0) {
     swimState.waveSurges++;
+    resolveBoard(board, swimDuckIndex(), SWIM_RESOLVE_OPTIONS);
   }
   swimState.waveCountdown = SWIM_WAVE_INTERVAL;
 
@@ -2527,7 +2553,7 @@ function applySwimMovementAction(board, from, to) {
     const movingPiece = fromPiece ?? toPiece;
     const emptyIndex = fromPiece ? to : from;
     swapBoardPieces(board, from, to);
-    const cascade = movingPiece?.type === "gem" && !movingPiece.swimDuck ? resolveBoard(board, emptyIndex, SWIM_RESOLVE_OPTIONS) : null;
+    const cascade = resolveBoard(board, emptyIndex, SWIM_RESOLVE_OPTIONS);
     return swimMoveResult(cascade, {
       emptyMove: true,
       duckMove: Boolean(movingPiece?.swimDuck),
@@ -2611,13 +2637,13 @@ function applyPlayerSwap(from, to) {
   if (result.accepted) {
     const finalBoard = cloneBoardForAnimation(state.players.player.board);
     const runId = matchRunId;
+    const settlement = applyPlayerBattleResultNow(result, previousStatus);
     playActionSounds(result, "player", previousStatus, { includeBattle: false, includeResult: false });
     void playBoardTimeline("player", beforeBoard, finalBoard, result, { type: "swap", from, to }, runId).then(() => {
       if (runId !== matchRunId || appScreen !== "game") {
         return;
       }
-      pendingPlayerSettlements.push({ result, previousStatus });
-      flushPendingPlayerSettlements();
+      playPlayerBattleFeedback(settlement);
     });
     return result;
   }
@@ -2640,13 +2666,13 @@ function applyPlayerSpecial(index) {
   if (result.accepted) {
     const finalBoard = cloneBoardForAnimation(state.players.player.board);
     const runId = matchRunId;
+    const settlement = applyPlayerBattleResultNow(result, previousStatus);
     playActionSounds(result, "player", previousStatus, { includeBattle: false, includeResult: false });
     void playBoardTimeline("player", beforeBoard, finalBoard, result, { type: "special", index }, runId).then(() => {
       if (runId !== matchRunId || appScreen !== "game") {
         return;
       }
-      pendingPlayerSettlements.push({ result, previousStatus });
-      flushPendingPlayerSettlements();
+      playPlayerBattleFeedback(settlement);
     });
     return result;
   }
