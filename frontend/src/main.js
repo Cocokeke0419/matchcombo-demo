@@ -81,6 +81,7 @@ let suppressNextClick = false;
 let matchRecordSaved = true;
 let swimRecordSaved = true;
 let pendingPlayerSettlements = [];
+let pendingAiSettlements = [];
 let playerSettlementTimer = null;
 const animatingBoards = new Set();
 let matchRunId = 0;
@@ -89,8 +90,23 @@ const SWIPE_THRESHOLD = GAME_CONFIG.input.swipeThresholdPx;
 const RECORD_HOST = window.location?.hostname || "本地文件";
 const RECORD_STORAGE_KEY = `matchComboRecord:v1:${RECORD_HOST}`;
 const MAX_BUFFERED_PLAYER_ACTIONS = 2;
+const MAX_BUFFERED_AI_SETTLEMENTS = 2;
 const BOARD_ANIMATION_MS = 660;
 const PLAYER_SETTLE_DELAY_MS = 920;
+const BOXING_AI_RESOLVE_OPTIONS = {
+  maxCascadeSteps: 4,
+  stopAfterCreatedSpecials: 1,
+  refill: {
+    controlledRefill: true,
+    generousRefillChance: 0.08,
+    avoidImmediateMatches: true,
+  },
+  stopRefill: {
+    controlledRefill: true,
+    generousRefillChance: 0,
+    avoidImmediateMatches: true,
+  },
+};
 const CREATED_SPECIAL_PRIORITY = ["colorBall", "bomb", "rocket", "propeller"];
 const SWIM_RACER_COUNT = 5;
 const SWIM_SCREEN_ROWS = BOARD_SIZE;
@@ -526,6 +542,7 @@ function clearPendingPlayerSettlements() {
     playerSettlementTimer = null;
   }
   pendingPlayerSettlements = [];
+  pendingAiSettlements = [];
 }
 
 function stopAiLoop() {
@@ -2023,7 +2040,12 @@ async function playBoardTimeline(side, beforeBoard, finalBoard, result, action =
         renderSwim();
       } else {
         state.players[side].board = cloneBoardForAnimation(finalBoard);
-        render();
+        if (side === "ai" && animatingBoards.has("player")) {
+          renderChrome();
+          renderBoard(aiBoardEl, "ai");
+        } else {
+          render();
+        }
       }
     }
   }
@@ -2191,6 +2213,8 @@ function flushPendingPlayerSettlements() {
     playBattleEventSounds(settlement.result, "player", settlement.previousStatus);
     animateBattleEvents(settlement.result);
   }
+
+  flushPendingAiSettlements();
 }
 
 function schedulePendingPlayerSettlement(result, previousStatus) {
@@ -2205,6 +2229,52 @@ function schedulePendingPlayerSettlement(result, previousStatus) {
       ? BOARD_ANIMATION_MS + 80
       : PLAYER_SETTLE_DELAY_MS;
   playerSettlementTimer = window.setTimeout(flushPendingPlayerSettlements, delay);
+}
+
+function playerBoardBusyForAiBattle() {
+  return animatingBoards.has("player") || pendingPlayerSettlements.length > 0;
+}
+
+function renderAiActionResult() {
+  if (animatingBoards.has("player")) {
+    renderChrome();
+    renderBoard(aiBoardEl, "ai");
+    return;
+  }
+  render();
+}
+
+function flushPendingAiSettlements() {
+  if (pendingAiSettlements.length === 0 || playerBoardBusyForAiBattle() || animatingBoards.has("ai")) {
+    return;
+  }
+
+  if (state.status !== "playing") {
+    pendingAiSettlements = [];
+    render();
+    return;
+  }
+
+  const settlements = pendingAiSettlements;
+  pendingAiSettlements = [];
+
+  for (const settlement of settlements) {
+    if (state.status !== "playing") {
+      break;
+    }
+    applyResultToBattle(state, "ai", settlement.result);
+  }
+
+  render();
+
+  for (const settlement of settlements) {
+    playBattleEventSounds(settlement.result, "ai", settlement.previousStatus);
+    animateBattleEvents(settlement.result);
+  }
+}
+
+function schedulePendingAiSettlement(result, previousStatus) {
+  pendingAiSettlements.push({ result, previousStatus });
 }
 
 function activeSwimRacer(racer) {
@@ -2879,27 +2949,43 @@ function startAiLoop() {
   }
 
   aiInterval = window.setInterval(() => {
-    if (state.status !== "playing") {
+    if (appScreen !== "game" || currentMode !== "boxing" || state.status !== "playing") {
       window.clearInterval(aiInterval);
       aiInterval = null;
       render();
       return;
     }
 
-    if (pendingPlayerSettlements.length > 0 || animatingBoards.size > 0) {
+    if (animatingBoards.has("ai")) {
+      return;
+    }
+
+    if (pendingAiSettlements.length > 0 && !playerBoardBusyForAiBattle()) {
+      flushPendingAiSettlements();
+      return;
+    }
+
+    const deferBattle = playerBoardBusyForAiBattle();
+    if (deferBattle && pendingAiSettlements.length >= MAX_BUFFERED_AI_SETTLEMENTS) {
       return;
     }
 
     const previousStatus = state.status;
     const beforeBoard = cloneBoardForAnimation(state.players.ai.board);
-    const result = takeAiTurn(state);
+    const result = takeAiTurn(state, {
+      deferBattle,
+      resolveOptions: BOXING_AI_RESOLVE_OPTIONS,
+    });
     const finalBoard = cloneBoardForAnimation(state.players.ai.board);
     const runId = matchRunId;
     playActionSounds(result, "ai", previousStatus);
+    if (deferBattle && result.accepted && !result.reshuffled) {
+      schedulePendingAiSettlement(result, previousStatus);
+    }
     if (result.accepted && !result.reshuffled) {
       void playBoardTimeline("ai", beforeBoard, finalBoard, result, {}, runId);
     } else {
-      render();
+      renderAiActionResult();
     }
   }, GAME_CONFIG.battle.aiTurnMs);
 }

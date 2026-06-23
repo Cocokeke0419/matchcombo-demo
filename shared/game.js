@@ -1432,7 +1432,7 @@ function scoreActionResult(result, actor = null) {
   return score;
 }
 
-export function findBestMove(board, actor = null) {
+export function findBestMove(board, actor = null, resolveOptions = {}) {
   let best = null;
 
   const consider = (move, result) => {
@@ -1454,7 +1454,7 @@ export function findBestMove(board, actor = null) {
 
     if (isSpecialPiece(piece)) {
       const testBoard = cloneBoard(board);
-      consider({ type: "special", index }, activateSpecial(testBoard, index));
+      consider({ type: "special", index }, activateSpecial(testBoard, index, null, resolveOptions));
     }
 
     const row = rowOf(index);
@@ -1474,20 +1474,20 @@ export function findBestMove(board, actor = null) {
       }
 
       const testBoard = cloneBoard(board);
-      consider({ type: "swap", from: index, to: neighbor }, trySwap(testBoard, index, neighbor));
+      consider({ type: "swap", from: index, to: neighbor }, trySwap(testBoard, index, neighbor, resolveOptions));
     }
   }
 
   return best;
 }
 
-export function takeAiTurn(state) {
+export function takeAiTurn(state, options = {}) {
   if (state.status !== "playing") {
     return { accepted: false, reason: "ended" };
   }
 
   const board = state.players.ai.board;
-  const move = findBestMove(board, state.players.ai);
+  const move = findBestMove(board, state.players.ai, options.resolveOptions);
   if (!move) {
     state.players.ai.board = createBoard();
     appendLog(state, "AI 重排了棋盘。");
@@ -1495,10 +1495,10 @@ export function takeAiTurn(state) {
   }
 
   if (move.type === "special") {
-    return applySpecialAction(state, "ai", move.index);
+    return applySpecialAction(state, "ai", move.index, options);
   }
 
-  return applySwapAction(state, "ai", move.from, move.to);
+  return applySwapAction(state, "ai", move.from, move.to, options);
 }
 
 export function getCellLabel(piece) {

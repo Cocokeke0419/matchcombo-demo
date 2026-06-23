@@ -9,15 +9,15 @@ export const GAME_CONFIG = {
     damageChargeMax: 140,
     obstacleChargeMax: 160,
     damagePerAttack: 85,
-    aiTurnMs: 1450,
+    aiTurnMs: 2400,
     sideChargeMultiplier: {
       player: {
         damage: 1,
         obstacle: 1,
       },
       ai: {
-        damage: 1.12,
-        obstacle: 1.1,
+        damage: 0.78,
+        obstacle: 0.72,
       },
     },
   },
